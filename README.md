@@ -66,6 +66,23 @@ stored are the stable ones: emergency numbers, plug types, what's in a dish.
 
 Verify anything consequential on the official link before you travel.
 
+## Where the content came from
+
+Every word of it was researched and written by hand, from knowledge rather than
+from a feed. There is no API behind this and the app makes no network calls at
+runtime — open it with the Wi-Fi off and everything still works. The only
+outbound request on the page is the Google Fonts stylesheet.
+
+That means the stored content is a point-in-time snapshot and will drift. The
+things least likely to drift are the ones chosen for storage: emergency numbers,
+plug types, what is in a dish, which staircase has no handrail. Prices, opening
+hours and entry rules are the ones to re-check, and each is marked as indicative
+where it appears.
+
+Anything that moves weekly is deep-linked to the government page that owns it
+rather than copied. Run `tools/check-links.sh` to verify those links still
+resolve.
+
 ## Adding a country
 
 Country data is plain JavaScript, one file per country, with no build step. See

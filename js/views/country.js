@@ -21,12 +21,14 @@
 
   /* ------------------------------ live links ------------------------------ */
   function officialLinks(country) {
+    // Each government uses its own slug for the same country, so a country may
+    // override any of them. Verified against the live sites in tools/check-links.sh.
     var slug = country.advisorySlug;
     var links = [
-      { label: 'US State Department advisory (current level)', url: 'https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/' + slug + '-travel-advisory.html' },
-      { label: 'CDC travel health notices and vaccines', url: 'https://wwwnc.cdc.gov/travel/destinations/traveler/none/' + slug },
-      { label: 'UK FCDO travel advice', url: 'https://www.gov.uk/foreign-travel-advice/' + slug },
-      { label: 'Canada travel advice', url: 'https://travel.gc.ca/destinations/' + slug },
+      { label: 'US State Department advisory (current level)', url: 'https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/' + (country.stateSlug || slug) + '-travel-advisory.html' },
+      { label: 'CDC travel health notices and vaccines', url: 'https://wwwnc.cdc.gov/travel/destinations/traveler/none/' + (country.cdcSlug || slug) },
+      { label: 'UK FCDO travel advice', url: 'https://www.gov.uk/foreign-travel-advice/' + (country.fcdoSlug || slug) },
+      { label: 'Canada travel advice', url: 'https://travel.gc.ca/destinations/' + (country.gcSlug || slug) },
       { label: 'Enroll in STEP so your embassy can reach you', url: 'https://step.state.gov/' }
     ];
     if (country.embassyDomain) {
@@ -635,7 +637,7 @@
         ['Vaccines', h ? h.vaccines : 'Check the CDC destination page for the current list.']
       ])]),
       el('div', { style: 'margin-top:12px' }, [ui.linkList([
-        { label: 'CDC destination page for ' + country.name, url: 'https://wwwnc.cdc.gov/travel/destinations/traveler/none/' + country.advisorySlug }
+        { label: 'CDC destination page for ' + country.name, url: 'https://wwwnc.cdc.gov/travel/destinations/traveler/none/' + (country.cdcSlug || country.advisorySlug) }
       ])])
     ]));
 

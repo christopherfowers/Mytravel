@@ -27,10 +27,37 @@ dossier.
   drivingSide: 'left',              // 'left' | 'right'
   tapWater: 'safe',                 // 'safe' | 'caution' | 'avoid'
   embassyDomain: 'jp.usembassy.gov',
-  advisorySlug: 'japan',            // builds the State Dept / CDC / FCDO URLs
+  advisorySlug: 'japan',            // builds the State Dept / CDC / FCDO / Canada URLs
   cities: ['Tokyo', 'Kyoto']        // also searchable
 }
 ```
+
+### When governments disagree on a slug
+
+`advisorySlug` builds four URLs, and the four governments do not always spell a
+country the same way. Any of them can be overridden individually:
+
+| Field | Overrides |
+| --- | --- |
+| `stateSlug` | `travel.state.gov/…/<slug>-travel-advisory.html` |
+| `cdcSlug` | `wwwnc.cdc.gov/travel/destinations/traveler/none/<slug>` |
+| `fcdoSlug` | `gov.uk/foreign-travel-advice/<slug>` |
+| `gcSlug` | `travel.gc.ca/destinations/<slug>` |
+
+Two live examples, both found by running `tools/check-links.sh`:
+
+```js
+// CDC has no standalone Hong Kong page; its China page covers Hong Kong.
+c('HK', 'Hong Kong', …, 'hong-kong', [...], { cdcSlug: 'china' })
+
+// CDC and the State Department use "czechia"; Canada still uses "czech-republic".
+c('CZ', 'Czechia', …, 'czechia', [...], { gcSlug: 'czech-republic' })
+```
+
+Run `tools/check-links.sh` after adding a country. It requests every generated
+URL and reports the broken ones. `travel.state.gov` blocks datacenter traffic and
+returns 403 for every slug, so those are reported separately and not counted as
+failures — check them with `--state` from a home connection.
 
 Recognised `emergency` keys, each rendered with a readable label: `general`,
 `police`, `ambulance`, `fire`, `fireAmbulance`, `ambulanceFire`, `touristPolice`,

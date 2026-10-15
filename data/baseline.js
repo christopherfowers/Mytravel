@@ -5,15 +5,15 @@
 (function () {
   'use strict';
 
-  /* code, name, region, currency, languages, english, emergency, plugs, volts, drive, tap, embassy, advisory, cities */
-  function c(code, name, region, currency, languages, english, emergency, plugs, volts, drive, tap, embassy, advisory, cities) {
-    return {
+  /* code, name, region, currency, languages, english, emergency, plugs, volts, drive, tap, embassy, advisory, cities, slugOverrides */
+  function c(code, name, region, currency, languages, english, emergency, plugs, volts, drive, tap, embassy, advisory, cities, overrides) {
+    return Object.assign({
       code: code, name: name, region: region, currency: currency, languages: languages,
       englishPrevalence: english, emergency: emergency, plugs: plugs, voltage: volts,
       drivingSide: drive, tapWater: tap, embassyDomain: embassy,
       advisorySlug: advisory || name.toLowerCase().replace(/[^a-z]+/g, '-'),
       cities: cities || [], depth: 'basic'
-    };
+    }, overrides || {});
   }
 
   var EU112 = { general: '112' };
@@ -34,7 +34,8 @@
       'china.usembassy-china.org.cn', 'china', ['Beijing', 'Shanghai', 'Xi\'an', 'Chengdu', 'Guilin']),
     c('HK', 'Hong Kong', 'East Asia', 'HKD (HK$)', ['Cantonese', 'English'], 'widely',
       { general: '999' }, ['G'], '220V / 50Hz', 'left', 'safe',
-      'hongkong.usconsulate.gov', 'hong-kong', ['Hong Kong Island', 'Kowloon', 'Lantau']),
+      'hongkong.usconsulate.gov', 'hong-kong', ['Hong Kong Island', 'Kowloon', 'Lantau'],
+      { cdcSlug: 'china' }),
     c('MN', 'Mongolia', 'East Asia', 'MNT (₮)', ['Mongolian'], 'limited',
       { general: '103', police: '102', fire: '101' }, ['C', 'E'], '220V / 50Hz', 'right', 'avoid',
       'mn.usembassy.gov', 'mongolia', ['Ulaanbaatar']),
@@ -174,7 +175,8 @@
     /* ------------------------- Central Europe -------------------------- */
     c('CZ', 'Czechia', 'Central Europe', 'CZK (Kč)', ['Czech'], 'widely',
       { general: '112', police: '158', ambulance: '155', fire: '150' }, ['C', 'E'], '230V / 50Hz', 'right', 'safe',
-      'cz.usembassy.gov', 'czech-republic', ['Prague', 'Brno', 'Český Krumlov']),
+      'cz.usembassy.gov', 'czechia', ['Prague', 'Brno', 'Český Krumlov'],
+      { gcSlug: 'czech-republic' }),
     c('PL', 'Poland', 'Central Europe', 'PLN (zł)', ['Polish'], 'some',
       { general: '112', police: '997', ambulance: '999', fire: '998' }, ['C', 'E'], '230V / 50Hz', 'right', 'safe',
       'pl.usembassy.gov', 'poland', ['Kraków', 'Warsaw', 'Gdańsk', 'Wrocław']),
