@@ -94,7 +94,8 @@
     /* ----------------------- Western Europe ---------------------------- */
     c('GB', 'United Kingdom', 'Western Europe', 'GBP (£)', ['English'], 'widely',
       { general: '999', alt: '112' }, ['G'], '230V / 50Hz', 'left', 'safe',
-      'uk.usembassy.gov', 'united-kingdom', ['London', 'Edinburgh', 'Bath', 'York', 'Glasgow']),
+      'uk.usembassy.gov', 'united-kingdom', ['London', 'Edinburgh', 'Bath', 'York', 'Glasgow'],
+      { fcdoSlug: false }),
     c('IE', 'Ireland', 'Western Europe', 'EUR (€)', ['English', 'Irish'], 'widely',
       { general: '112', alt: '999' }, ['G'], '230V / 50Hz', 'left', 'safe',
       'ie.usembassy.gov', 'ireland', ['Dublin', 'Galway', 'Killarney', 'Cork']),
@@ -274,13 +275,15 @@
       'jm.usembassy.gov', 'jamaica', ['Montego Bay', 'Negril', 'Kingston']),
     c('BS', 'Bahamas', 'Caribbean', 'BSD (B$) and USD', ['English'], 'widely',
       { general: '911', alt: '919' }, ['A', 'B'], '120V / 60Hz', 'left', 'caution',
-      'bs.usembassy.gov', 'the-bahamas', ['Nassau', 'Exuma']),
+      'bs.usembassy.gov', 'the-bahamas', ['Nassau', 'Exuma'],
+      { fcdoSlug: 'bahamas' }),
     c('BB', 'Barbados', 'Caribbean', 'BBD (Bds$)', ['English'], 'widely',
       { police: '211', ambulance: '511', fire: '311' }, ['A', 'B'], '115V / 50Hz', 'left', 'safe',
       'bb.usembassy.gov', 'barbados', ['Bridgetown']),
     c('PR', 'Puerto Rico', 'Caribbean', 'USD ($)', ['Spanish', 'English'], 'widely',
       { general: '911' }, ['A', 'B'], '120V / 60Hz', 'right', 'safe',
-      null, 'puerto-rico', ['San Juan', 'Ponce', 'Vieques']),
+      null, 'puerto-rico', ['San Juan', 'Ponce', 'Vieques'],
+      { stateSlug: false, fcdoSlug: 'usa' }),
 
     /* -------------------------- South America -------------------------- */
     c('BR', 'Brazil', 'South America', 'BRL (R$)', ['Portuguese'], 'limited',

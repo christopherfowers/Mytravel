@@ -20,20 +20,33 @@
   ];
 
   /* ------------------------------ live links ------------------------------ */
+  /* Each government spells countries differently, and some do not cover a given
+     country at all: the UK publishes no advice about the UK, and neither the UK
+     nor the State Department covers Puerto Rico, which is US territory. So a
+     country may override any slug, or set it to false to drop that source.
+     All of these are verified against the live sites by tools/check-links.sh. */
+  var SOURCES = [
+    { key: 'stateSlug', label: 'US State Department advisory (current level)',
+      url: function (s) { return 'https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/' + s + '-travel-advisory.html'; } },
+    { key: 'cdcSlug', label: 'CDC travel health notices and vaccines',
+      url: function (s) { return 'https://wwwnc.cdc.gov/travel/destinations/traveler/none/' + s; } },
+    { key: 'fcdoSlug', label: 'UK FCDO travel advice',
+      url: function (s) { return 'https://www.gov.uk/foreign-travel-advice/' + s; } },
+    { key: 'gcSlug', label: 'Canada travel advice',
+      url: function (s) { return 'https://travel.gc.ca/destinations/' + s; } }
+  ];
+
   function officialLinks(country) {
-    // Each government uses its own slug for the same country, so a country may
-    // override any of them. Verified against the live sites in tools/check-links.sh.
-    var slug = country.advisorySlug;
-    var links = [
-      { label: 'US State Department advisory (current level)', url: 'https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/' + (country.stateSlug || slug) + '-travel-advisory.html' },
-      { label: 'CDC travel health notices and vaccines', url: 'https://wwwnc.cdc.gov/travel/destinations/traveler/none/' + (country.cdcSlug || slug) },
-      { label: 'UK FCDO travel advice', url: 'https://www.gov.uk/foreign-travel-advice/' + (country.fcdoSlug || slug) },
-      { label: 'Canada travel advice', url: 'https://travel.gc.ca/destinations/' + (country.gcSlug || slug) },
-      { label: 'Enroll in STEP so your embassy can reach you', url: 'https://step.state.gov/' }
-    ];
+    var links = [];
     if (country.embassyDomain) {
-      links.unshift({ label: 'Your embassy in ' + country.name, url: 'https://' + country.embassyDomain + '/' });
+      links.push({ label: 'Your embassy in ' + country.name, url: 'https://' + country.embassyDomain + '/' });
     }
+    SOURCES.forEach(function (source) {
+      var slug = country[source.key] === undefined ? country.advisorySlug : country[source.key];
+      if (!slug) return;
+      links.push({ label: source.label, url: source.url(slug) });
+    });
+    links.push({ label: 'Enroll in STEP so your embassy can reach you', url: 'https://step.state.gov/' });
     return links;
   }
 

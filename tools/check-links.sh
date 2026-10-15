@@ -17,12 +17,14 @@ global.window = { TRAVEL: { data: {
 } } };
 require("./data/baseline.js");
 require("fs").readdirSync("./data/countries").forEach(f => require("./data/countries/" + f));
+// "-" marks a source this country deliberately does not link (e.g. the UK FCDO
+// publishes no advice about the UK), so the checker skips it rather than flagging it.
+const slug = (c, key) => {
+  const v = c[key] === undefined ? c.advisorySlug : c[key];
+  return v || "-";
+};
 reg.forEach(c => console.log([
-  c.code,
-  c.stateSlug || c.advisorySlug,
-  c.cdcSlug   || c.advisorySlug,
-  c.fcdoSlug  || c.advisorySlug,
-  c.gcSlug    || c.advisorySlug
+  c.code, slug(c, "stateSlug"), slug(c, "cdcSlug"), slug(c, "fcdoSlug"), slug(c, "gcSlug")
 ].join(" ")));
 ')
 
@@ -44,13 +46,20 @@ check() { # url label
 echo "Checking government links for every country..."
 while read -r code state cdc fcdo gc; do
   [ -z "$code" ] && continue
-  [ "${1:-}" = "--state" ] && check "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/${state}-travel-advisory.html" "$code state"
-  check "https://wwwnc.cdc.gov/travel/destinations/traveler/none/${cdc}" "$code cdc"
-  check "https://www.gov.uk/foreign-travel-advice/${fcdo}"               "$code fcdo"
-  check "https://travel.gc.ca/destinations/${gc}"                        "$code canada"
+  if [ "${1:-}" = "--state" ] && [ "$state" != "-" ]; then
+    check "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/${state}-travel-advisory.html" "$code state"
+  fi
+  [ "$cdc"  != "-" ] && check "https://wwwnc.cdc.gov/travel/destinations/traveler/none/${cdc}" "$code cdc"
+  [ "$fcdo" != "-" ] && check "https://www.gov.uk/foreign-travel-advice/${fcdo}"               "$code fcdo"
+  [ "$gc"   != "-" ] && check "https://travel.gc.ca/destinations/${gc}"                        "$code canada"
+  true
 done <<< "$SLUGS"
 
 echo
-echo "$checked checked, $fail broken, $blocked blocked by travel.state.gov (inconclusive)"
+if [ "${1:-}" = "--state" ]; then
+  echo "$checked checked, $fail broken, $blocked blocked by travel.state.gov (inconclusive)"
+else
+  echo "$checked checked, $fail broken; travel.state.gov skipped (pass --state to include it)"
+fi
 [ "$fail" -gt 0 ] && exit 1
 echo "All reachable links OK."

@@ -44,7 +44,10 @@ country the same way. Any of them can be overridden individually:
 | `fcdoSlug` | `gov.uk/foreign-travel-advice/<slug>` |
 | `gcSlug` | `travel.gc.ca/destinations/<slug>` |
 
-Two live examples, both found by running `tools/check-links.sh`:
+Set a slug to `false` to drop that source entirely, for the cases where a
+government does not cover a country at all.
+
+All five live examples were found by running `tools/check-links.sh`:
 
 ```js
 // CDC has no standalone Hong Kong page; its China page covers Hong Kong.
@@ -52,6 +55,16 @@ c('HK', 'Hong Kong', …, 'hong-kong', [...], { cdcSlug: 'china' })
 
 // CDC and the State Department use "czechia"; Canada still uses "czech-republic".
 c('CZ', 'Czechia', …, 'czechia', [...], { gcSlug: 'czech-republic' })
+
+// The FCDO drops the article.
+c('BS', 'Bahamas', …, 'the-bahamas', [...], { fcdoSlug: 'bahamas' })
+
+// The UK publishes no travel advice about the UK.
+c('GB', 'United Kingdom', …, 'united-kingdom', [...], { fcdoSlug: false })
+
+// Puerto Rico is US territory: no State Department advisory, and the FCDO
+// files it under the USA.
+c('PR', 'Puerto Rico', …, 'puerto-rico', [...], { stateSlug: false, fcdoSlug: 'usa' })
 ```
 
 Run `tools/check-links.sh` after adding a country. It requests every generated
