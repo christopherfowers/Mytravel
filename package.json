@@ -1,0 +1,14 @@
+{
+  "name": "trip-dossier",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Family travel planning for countries where you don't speak the language",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "build": "node tools/build-artifact.js",
+    "test": "node tools/check.js"
+  },
+  "devDependencies": {
+    "playwright": "1.49.1"
+  }
+}
